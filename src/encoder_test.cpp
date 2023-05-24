@@ -43,7 +43,7 @@ void mult_test() {
     auto poly1 = encoder.sigma_inverse(vec1);
     auto poly2 = encoder.sigma_inverse(vec2);
     poly1.mult_poly(poly2);
-    poly1.mod_poly(4);
+    poly1.mod_poly_power(4);
     auto vec = encoder.sigma(poly1);
     for(auto i : vec) {
         std::cout << i << std::endl;

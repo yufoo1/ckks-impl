@@ -61,7 +61,7 @@ public:
         return max;
     }
 
-    auto mod_poly(int power) {
+    auto mod_poly_power(int power) {
         /**
          * mod x^power + 1
          */
@@ -72,6 +72,14 @@ public:
             std::complex<double> new_term = {-term.real(), -term.imag()};
             add_term(max - power, new_term);
         }
+    }
+
+    auto mod_poly_coefficient(int q) {
+        std::map<int, std::complex<double>> new_terms;
+        for(auto term : terms) {
+            new_terms.insert({term.first, int(term.second.real()) % q});
+        }
+        terms = new_terms;
     }
 
     auto get_value(std::complex<double> root) {

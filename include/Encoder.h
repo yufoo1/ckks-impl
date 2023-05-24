@@ -129,8 +129,8 @@ public:
 
     auto coordinate_wise_random_rounding(std::vector<double> vec) {
         std::vector<int> new_vec;
-        std::random_device rd;
-        auto gen = std::default_random_engine(rd());
+        auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+        auto gen = std::default_random_engine(seed);
         std::uniform_int_distribution<int> dist(1,100);
         for(auto i : vec) {
             if(dist(gen) % 2) {
