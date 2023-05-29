@@ -77,7 +77,11 @@ public:
     auto mod_poly_coefficient(int q) {
         std::map<int, std::complex<double>> new_terms;
         for(auto term : terms) {
-            new_terms.insert({term.first, (int(term.second.real()) + q) % q});
+            int real = int(term.second.real());
+            while(real < 0) {
+                real += q;
+            }
+            new_terms.insert({term.first, real % q});
         }
         terms = new_terms;
     }

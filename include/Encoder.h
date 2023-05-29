@@ -143,7 +143,7 @@ public:
     }
 
     auto sigma_R_discrete(std::vector<std::complex<double>> z) {
-        auto coordinates = get_basis_coordinates(z);
+        auto coordinates = get_basis_coordinates(std::move(z));
         auto rounded_coordinates = coordinate_wise_random_rounding(coordinates);
         auto matrix = get_vandermonde();
         std::vector<std::complex<double>> vec;
