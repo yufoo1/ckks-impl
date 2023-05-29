@@ -19,7 +19,8 @@ public:
         auto n = m / 2;
         auto seed = std::chrono::system_clock::now().time_since_epoch().count();
         auto gen = std::default_random_engine(seed);
-        std::normal_distribution<double> dist(0, 3.2);
+        std::cout << double(8 / std::sqrt(2 * M_PI)) << std::endl;
+        std::normal_distribution<double> dist(0, double(8 / std::sqrt(2 * M_PI)));
         Polynomial error;
         for(int i = 0; i < n; ++i) {
             error.add_term(i, floor(dist(gen)));
