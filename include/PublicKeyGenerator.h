@@ -18,21 +18,24 @@ private:
         auto n = m / 2;
         auto seed = std::chrono::system_clock::now().time_since_epoch().count();
         auto gen = std::default_random_engine(seed);
-        std::normal_distribution<int> dist(0, 3);
+        std::normal_distribution<double> dist(0, 3.2);
         Polynomial error;
         for(int i = 0; i < n; ++i) {
-            error.add_term(i, dist(gen));
+            error.add_term(i, floor(dist(gen)));
         }
         return error;
     }
 
     auto public_key_1_generate(Polynomial sk) {
+        auto n = m / 2;
         auto error = error_generate();
         for(auto term : pk2.get_terms()) {
             pk1.add_term(term.first, {-term.second.real(), -term.second.imag()});
         }
         pk1.mult_poly(std::move(sk));
+        pk1.mod_poly_power(n);
         pk1.add_poly(error);
+        pk1.mod_poly_coefficient(q);
     }
 
     auto public_key_2_generate() {
@@ -43,6 +46,7 @@ private:
         for(int i = 0; i < n; ++i) {
             pk2.add_term(i, dist(gen));
         }
+        pk2.mod_poly_coefficient(q);
     }
 
 public:

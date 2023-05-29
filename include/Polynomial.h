@@ -65,7 +65,7 @@ public:
         /**
          * mod x^power + 1
          */
-        while(power < get_max_power()) {
+        while(power <= get_max_power()) {
             auto max = get_max_power();
             auto term = terms.at(get_max_power());
             terms.erase(get_max_power());

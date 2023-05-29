@@ -1,5 +1,6 @@
 #include <iostream>
-#include "../include/Encoder.h"
+#include "include/Encoder.h"
+#include "include/KeyGenerator.h"
 
 auto encoder = Encoder(8, 64);
 
@@ -70,11 +71,26 @@ void decode_test() {
     }
 }
 
+void secret_key_test() {
+    std::cout << "secret key test" << std::endl;
+    KeyGenerator keyGenerator(8, 67);
+    std::cout << keyGenerator.get_secret_key_generator().get_secret_key() << std::endl;
+}
+
+void public_key_test() {
+    std::cout << "public key test" << std::endl;
+    KeyGenerator keyGenerator(8, 67);
+    std::cout << keyGenerator.get_public_key_generator().get_public_key_1() << std::endl;
+    std::cout << keyGenerator.get_public_key_generator().get_public_key_2() << std::endl;
+}
+
 int main() {
     basic_test();
     add_test();
     mult_test();
     encode_test();
     decode_test();
+    secret_key_test();
+    public_key_test();
     return 0;
 }

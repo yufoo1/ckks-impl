@@ -113,7 +113,7 @@ public:
         assert(a.size() == b.size());
         std::complex<double> complex = 0;
         for(int i = 0; i < a.size(); ++i) {
-            complex += conj(a.at(i)) * b.at(i);
+            complex += a.at(i) * conj(b.at(i));
         }
         return complex.real();
     }
