@@ -2,10 +2,11 @@
 #include "include/Encoder.h"
 #include "include/SecretKeyGenerator.h"
 #include "include/PublicKeyGenerator.h"
+#include "include/Encryptor.h"
 
 auto encoder = Encoder(8, 64);
 
-void basic_test() {
+auto basic_test() {
     std::cout << "basic test" << std::endl;
     std::cout << encoder.get_unit_root() << std::endl;
     std::cout << encoder.get_power_of_unit_root(4) << std::endl;
@@ -25,7 +26,7 @@ void basic_test() {
     }
 }
 
-void add_test() {
+auto add_test() {
     std::cout << "add test" << std::endl;
     std::vector<std::complex<double>> vec1 = {1, 2, 3, 4};
     std::vector<std::complex<double>> vec2 = {1, -2, 3, -4};
@@ -38,7 +39,7 @@ void add_test() {
     }
 }
 
-void mult_test() {
+auto mult_test() {
     std::cout << "mult test" << std::endl;
     std::vector<std::complex<double>> vec1 = {1, 2, 3, 4};
     std::vector<std::complex<double>> vec2 = {1, -2, 3, -4};
@@ -52,50 +53,49 @@ void mult_test() {
     }
 }
 
-void encode_test() {
+auto encode_decode_test() {
     std::cout << "encode test" << std::endl;
     std::vector<std::complex<double>> vec = {{3, 4}, {2, -1}};
     auto poly = encoder.encode(vec);
     std::cout << poly << std::endl;
-}
-
-void decode_test() {
     std::cout << "decode test" << std::endl;
-    Polynomial poly;
-    poly.add_term(0, 160);
-    poly.add_term(1, 90);
-    poly.add_term(2, 160);
-    poly.add_term(3, 45);
-    auto vec = encoder.decode(poly);
-    for(auto i : vec) {
+    auto new_vec = encoder.decode(poly);
+    for(auto i : new_vec) {
         std::cout << i << std::endl;
     }
 }
 
-void secret_key_test() {
+auto decrypt_encrypt_test() {
+    auto m = 8, q = 67;
     std::cout << "secret key test" << std::endl;
-    SecretKeyGenerator secretKeyGenerator(8);
+    SecretKeyGenerator secretKeyGenerator(m);
     secretKeyGenerator.secret_key_generate();
     std::cout << secretKeyGenerator.get_secret_key() << std::endl;
-}
-
-void public_key_test() {
     std::cout << "public key test" << std::endl;
-    PublicKeyGenerator publicKeyGenerator(8, 67);
-    SecretKeyGenerator secretKeyGenerator(8);
-    secretKeyGenerator.secret_key_generate();
+    PublicKeyGenerator publicKeyGenerator(m, q);
     publicKeyGenerator.public_key_generate(secretKeyGenerator.get_secret_key());
     std::cout << publicKeyGenerator.get_public_key_1() << std::endl;
     std::cout << publicKeyGenerator.get_public_key_2() << std::endl;
+    std::cout << "encrypt test" << std::endl;
+    std::vector<std::complex<double>> vec = {{3, 4}, {2, -1}};
+    auto poly = encoder.encode(vec);
+    auto encryptor = Encryptor(m, q);
+    auto encrypt_poly = encryptor.encrypt(poly, publicKeyGenerator.get_public_key_1(), publicKeyGenerator.get_public_key_2());
+    std::cout << encrypt_poly.first << std::endl;
+    std::cout << encrypt_poly.second << std::endl;
+    std::cout << "decrypt test" << std::endl;
+    auto decrypt_poly = encryptor.decrypt(encrypt_poly.first, encrypt_poly.second, secretKeyGenerator.get_secret_key());
+    auto new_vec = encoder.decode(decrypt_poly);
+    for(auto i : new_vec) {
+        std::cout << i << std::endl;
+    }
 }
 
 int main() {
     basic_test();
     add_test();
     mult_test();
-    encode_test();
-    decode_test();
-    secret_key_test();
-    public_key_test();
+    encode_decode_test();
+    decrypt_encrypt_test();
     return 0;
 }
